@@ -53,6 +53,62 @@
   input[type="number"],select,input[type="text"]{ width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:13px; transition:border-color .2s ease, box-shadow .2s ease; }
   input[type="number"]:focus,select:focus,input[type="text"]:focus{ outline:none; border-color:#93c5fd; }
 
+  /* ---------------------------------------------------- */
+  /* NEW ATTRACTIVE TOGGLE BAR STYLES                     */
+  /* ---------------------------------------------------- */
+  .toggle-wrapper {
+      position: relative;
+      display: flex;
+      background: #f1f5f9; /* Light grey background */
+      border-radius: 99px; /* Fully rounded pill */
+      padding: 4px;
+      height: 44px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); /* Inner shadow for depth */
+      border: 1px solid #e2e8f0;
+      overflow: hidden; /* Keep sliding element contained */
+      isolation: isolate; /* Create stacking context */
+  }
+
+  /* The floating white pill that slides */
+  .toggle-slider {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 0;
+      border-radius: 99px;
+      background: #ffffff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.05); /* Soft drop shadow */
+      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 1;
+      pointer-events: none; /* Let clicks pass through to options */
+  }
+
+  /* The text options */
+  .toggle-option {
+      flex: 1;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      cursor: pointer;
+      z-index: 2; /* Sit on top of slider */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s ease;
+      user-select: none;
+      border-radius: 99px;
+  }
+
+  .toggle-option:hover {
+      color: #475569;
+  }
+
+  .toggle-option.active {
+      color: var(--blue); /* Brand color when active */
+      font-weight: 700;
+  }
+
   /* Member row */
   .member-card{ border:1px dashed var(--border); border-radius:12px; padding:10px; }
   .band-wrap{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
@@ -188,11 +244,10 @@
     padding: 10px; 
     border-radius: 14px; 
     border: 2px solid #374151;
-    /* FIX: Reduced width to prevent border clipping */
     width: 95%; 
     max-width: 800px;
     margin: 20px auto;
-    overflow: visible; /* Ensure borders aren't hidden */
+    overflow: visible; 
   }
 
   /* HEADER STYLING FOR QUOTE */
@@ -238,7 +293,7 @@
   /* Compact Premium Box */
   .premium-box {
     background: rgba(125, 28, 125); 
-    border: 2px dashed #000; /* BLACK DASHED BORDER */
+    border: 2px dashed #000; 
     border-radius: 8px;
     padding: 5px; 
     text-align: center;
@@ -316,7 +371,6 @@
     #result-section { 
         display: block !important; 
         border: 2px solid #374151 !important; 
-        /* Safe width for PDF generation */
         width: 95% !important; 
         margin: 0 auto !important;
         padding: 5px !important;
@@ -375,9 +429,29 @@
             <div class="col-12"><label>Customer Name</label><input type="text" id="customerName" placeholder="Enter Customer Name"></div>
 
             <div class="col-6"><label>Sum Insured</label><select id="sumInsured"><option>5 Lac</option><option>7.5 Lac</option><option selected>10 Lac</option><option>12.5 Lac</option><option>15 Lac</option><option>20 Lac</option><option>25 Lac</option><option>30 Lac</option><option>35 Lac</option><option>50 Lac</option><option>75 Lac</option><option>1Cr</option></select></div>
-            <div class="col-6"><label>Policy Type</label><select id="policyType"><option>Individual</option><option>Family Floater</option></select></div>
+            
+            <div class="col-6">
+                <label>Policy Type</label>
+                <input type="hidden" id="policyType" value="Individual">
+                <div class="toggle-wrapper">
+                    <div class="toggle-slider"></div>
+                    <div class="toggle-option active" data-val="Individual">Individual</div>
+                    <div class="toggle-option" data-val="Family Floater">Floater</div>
+                </div>
+            </div>
+
             <div class="col-6"><label>Combination</label><div class="band-wrap" style="gap:6px;"><select id="combination" style="flex:1;"><option>1A</option><option>2A</option><option>1A+1C</option><option>1A+2C</option><option>1A+3C</option><option>1A+4C</option><option>1A+5C</option><option>2A+1C</option><option>2A+2C</option><option>2A+3C</option><option>2A+4C</option><option>2A+5C</option></select><button class="btn btn-grey" id="genMembersBtn">Generate</button></div></div>
-            <div class="col-6"><label>Zone</label><select id="zone"><option>Zone B</option><option>Zone A</option></select></div>
+            
+            <div class="col-6">
+                <label>Zone</label>
+                <input type="hidden" id="zone" value="Zone B">
+                <div class="toggle-wrapper">
+                    <div class="toggle-slider"></div>
+                    <div class="toggle-option" data-val="Zone A">Zone A</div>
+                    <div class="toggle-option active" data-val="Zone B">Zone B</div>
+                </div>
+            </div>
+
             <div class="col-6"><label>Tenure</label><select id="tenure"><option>1 Year</option></select></div>
           </div>
         </section>
@@ -461,7 +535,7 @@
             
           <div class="res-header-row">
             <div class="res-left">
-                <div>HEALTH ALPHA</div>
+                <div>PRODUCT : HEALTH ALPHA</div>
                 <div>VARIANT : SELECT</div>
             </div>
             <div class="res-center">
@@ -1011,7 +1085,69 @@
       // Simple reload for now to clear all state properly
       window.location.reload(); 
   });
-  ['policyType','combination','zone','tenure'].forEach(id=>{ document.getElementById(id).addEventListener('change', ()=>{ if(id==='policyType'){ enforcePolicyCombination(); } renderMemberRows(); }); }); enforcePolicyCombination(); renderMemberRows();
+  
+  // -- NEW TOGGLE LOGIC INIT --
+  function initToggles() {
+    document.querySelectorAll('.toggle-wrapper').forEach(wrapper => {
+        // Find the hidden input associated (previous sibling in our markup)
+        const hiddenInput = wrapper.previousElementSibling;
+        const options = wrapper.querySelectorAll('.toggle-option');
+        const slider = wrapper.querySelector('.toggle-slider');
+        
+        // Helper to move slider
+        const moveSlider = (targetOption) => {
+            // Because flex items might not have calculated width instantly on render, 
+            // we rely on offsetLeft and offsetWidth
+            const left = targetOption.offsetLeft;
+            const width = targetOption.offsetWidth;
+            slider.style.transform = `translateX(${left}px)`;
+            slider.style.width = `${width}px`;
+        };
+        
+        // Initial set (wait a tick for rendering)
+        const activeOpt = wrapper.querySelector('.toggle-option.active');
+        if(activeOpt) {
+            setTimeout(() => moveSlider(activeOpt), 50);
+        }
+        
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                // 1. Visual update
+                options.forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+                
+                // 2. Animate Slider
+                moveSlider(opt);
+                
+                // 3. Value update
+                const newVal = opt.getAttribute('data-val');
+                hiddenInput.value = newVal;
+                
+                // 4. Dispatch change event so other listeners (enforcePolicyCombination, calcPremium) react
+                hiddenInput.dispatchEvent(new Event('change'));
+            });
+        });
+        
+        // Handle window resize to keep slider consistent
+        window.addEventListener('resize', () => {
+            const currentActive = wrapper.querySelector('.toggle-option.active');
+            if(currentActive) moveSlider(currentActive);
+        });
+    });
+  }
+  initToggles();
+
+  // Re-attach listeners to the hidden inputs since we replaced selects
+  ['policyType','combination','zone','tenure'].forEach(id=>{ 
+      document.getElementById(id).addEventListener('change', ()=>{ 
+          if(id==='policyType'){ enforcePolicyCombination(); } 
+          // If policy type changes, we might need to re-render rows or logic
+          if(id==='policyType' || id==='combination') renderMemberRows(); 
+      }); 
+  }); 
+  
+  enforcePolicyCombination(); 
+  renderMemberRows();
 
   // Listen for Maternity changes to toggle waiting period
   document.getElementById('maternity').addEventListener('change', updateOptionalVisibility);
