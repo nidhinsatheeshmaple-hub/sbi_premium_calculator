@@ -185,34 +185,37 @@
     
   #result-section { 
     background: white; 
-    padding: 15px; 
+    padding: 10px; /* Reduced Padding */
     border-radius: 14px; 
     border: 2px solid #374151;
-    width: 98%; 
+    width: 100%; 
+    max-width: 800px;
     margin: 20px auto;
+    overflow: hidden; /* Prevents overflow issues */
   }
 
-  /* NEW HEADER STYLING FOR QUOTE */
+  /* HEADER STYLING FOR QUOTE */
   .res-header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 2px solid #e5e7eb;
-      padding-bottom: 8px;
-      margin-bottom: 10px;
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+      width: 100%;
   }
 
   .res-left {
-      width: 30%;
+      width: 35%;
       text-align: left;
       font-size: 12px;
       color: rgba(94, 10, 94);
       font-weight: 800;
-      line-height: 1.3;
+      line-height: 1.2;
   }
 
   .res-center {
-      width: 40%;
+      width: 30%;
       text-align: center;
       font-size: 16px;
       font-weight: 800;
@@ -221,8 +224,9 @@
   }
 
   .res-right {
-      width: 30%;
-      text-align: right;
+      width: 35%;
+      display: flex;
+      justify-content: flex-end;
   }
 
   .res-logo {
@@ -235,26 +239,27 @@
     background: #f0fdf4; 
     border: 2px dashed #16a34a;
     border-radius: 8px;
-    padding: 6px; 
+    padding: 5px; 
     text-align: center;
-    margin-bottom: 8px; 
+    margin-bottom: 5px; 
   }
-  .premium-title { font-size: 13px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 1px; }
-  .premium-amount { font-size: 18px; font-weight: 900; color: #15803d; margin: 2px 0; } 
+  .premium-title { font-size: 12px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 1px; }
+  .premium-amount { font-size: 18px; font-weight: 900; color: #15803d; margin: 1px 0; } 
   .discount-info { color: #15803d; font-size: 9px; font-weight: 600; }
 
   /* Compact Table Styling */
   .result-table { 
     width: 100%; 
-    margin: 0 auto 5px auto; 
+    margin: 0 auto 3px auto; 
     table-layout: fixed; 
+    border-collapse: collapse;
   }
     
   .result-table th, .result-table td { 
-    padding: 1px 6px; 
+    padding: 1px 4px; /* Very tight padding for PDF fit */
     border: 1px solid #9ca3af; 
-    font-size: 10px; 
-    line-height: 1.3;
+    font-size: 9px; /* Smaller font for single page */
+    line-height: 1.2;
     vertical-align: middle;
   }
     
@@ -262,35 +267,45 @@
     background-color: #f3f4f6; 
     color: #111827; 
     font-weight: 700; 
-    width: 40%; 
+    width: 45%; 
     text-align: left; 
-    height: 20px;
+    height: 18px;
   }
     
   .result-table td { 
     color: #1f2937; 
-    width: 60%; 
+    width: 55%; 
     text-align: left;
-    height: 20px;
+    height: 18px;
   }
     
   /* Section headers in result */
   #result-section .section-title {
       font-size: 10px;
       margin-bottom: 2px;
-      min-height: 18px;
+      min-height: 16px;
+      margin-top: 4px;
   }
-  #result-section .section-title .tag { padding: 2px 8px; }
+  #result-section .section-title .tag { padding: 1px 6px; }
 
   /* Disclaimer Styling */
   .disclaimer-note {
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 800; 
       font-style: italic;
       color: #555;
       text-align: center;
-      margin-top: 10px;
-      line-height: 1.2;
+      margin-top: 8px;
+      line-height: 1.1;
+  }
+
+  /* MEDIA QUERIES FOR MOBILE ALIGNMENT */
+  @media (max-width: 600px) {
+      .res-left { font-size: 10px; width: 40%; }
+      .res-center { font-size: 13px; width: 20%; }
+      .res-right { width: 40%; }
+      .res-logo { max-width: 100px; } /* Shrink logo on mobile */
+      #result-section { padding: 8px; margin: 10px auto; width: 95%; }
   }
     
   /* Print Media - Hide inputs */
@@ -300,11 +315,11 @@
     #result-section { 
         display: block !important; 
         border: 2px solid #374151 !important; 
-        width: 98% !important; 
+        width: 100% !important; 
         margin: 0 auto !important;
-        padding: 10px !important;
+        padding: 5px !important;
     }
-    .result-table th, .result-table td { border: 1px solid #000 !important; font-size: 10px !important; padding: 2px 5px !important; }
+    .result-table th, .result-table td { border: 1px solid #000 !important; font-size: 8px !important; padding: 1px 3px !important; }
       
     /* Hide result actions in print (download buttons themselves) */
     .result-actions { display: none !important; }
@@ -993,8 +1008,10 @@
   document.getElementById('pdfBtn').addEventListener('click', ()=>{
       const element = document.getElementById('result-section');
       if(element.style.display === 'none') { alert("Please Calculate Premium first."); return; }
+      
+      // OPTIMIZED FOR SINGLE PAGE
       const opt = {
-          margin: [5, 5, 5, 5], 
+          margin: [3, 3, 3, 3], // Tighter margins
           filename: 'Health_Alpha_Quote.pdf',
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
@@ -1040,7 +1057,7 @@ let msg = `*Health Alpha Quote* 🏥\n\n`;
     
     // 3. Configure PDF Options
     const opt = {
-      margin: [5, 5, 5, 5],
+      margin: [3, 3, 3, 3], // Tighter margins
       filename: 'Health_Alpha_Quote.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
