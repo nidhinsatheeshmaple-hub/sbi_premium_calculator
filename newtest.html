@@ -185,13 +185,14 @@
     
   #result-section { 
     background: white; 
-    padding: 10px; /* Reduced Padding */
+    padding: 10px; 
     border-radius: 14px; 
     border: 2px solid #374151;
-    width: 100%; 
+    /* FIX: Reduced width to prevent border clipping */
+    width: 95%; 
     max-width: 800px;
     margin: 20px auto;
-    overflow: hidden; /* Prevents overflow issues */
+    overflow: visible; /* Ensure borders aren't hidden */
   }
 
   /* HEADER STYLING FOR QUOTE */
@@ -256,9 +257,9 @@
   }
     
   .result-table th, .result-table td { 
-    padding: 1px 4px; /* Very tight padding for PDF fit */
+    padding: 1px 4px; 
     border: 1px solid #9ca3af; 
-    font-size: 9px; /* Smaller font for single page */
+    font-size: 9px; 
     line-height: 1.2;
     vertical-align: middle;
   }
@@ -308,16 +309,18 @@
       #result-section { padding: 8px; margin: 10px auto; width: 95%; }
   }
     
-  /* Print Media - Hide inputs */
+  /* Print Media - Ensure width is safe for PDF */
   @media print {
     #basic-section, #members-section, #modifiers-section, #optional-section, #discounts-section, .actions, #pagedrop-fab-container, #pagedrop-expiry-popup, #membersError, .back-nav, .primary-actions { display: none !important; }
       
     #result-section { 
         display: block !important; 
         border: 2px solid #374151 !important; 
-        width: 100% !important; 
+        /* Safe width for PDF generation */
+        width: 95% !important; 
         margin: 0 auto !important;
         padding: 5px !important;
+        box-sizing: border-box !important;
     }
     .result-table th, .result-table td { border: 1px solid #000 !important; font-size: 8px !important; padding: 1px 3px !important; }
       
