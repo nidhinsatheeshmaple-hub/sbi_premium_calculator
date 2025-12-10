@@ -238,7 +238,7 @@
   /* Compact Premium Box */
   .premium-box {
     background: rgba(125, 28, 125); 
-    border: 3px dashed #000;
+    border: 2px dashed #000; /* BLACK DASHED BORDER */
     border-radius: 8px;
     padding: 5px; 
     text-align: center;
@@ -372,6 +372,8 @@
         <section class="card" id="basic-section">
           <div class="section-title"><span class="tag">Basic Details</span><span class="divider"></span></div>
           <div class="grid">
+            <div class="col-12"><label>Customer Name</label><input type="text" id="customerName" placeholder="Enter Customer Name"></div>
+
             <div class="col-6"><label>Sum Insured</label><select id="sumInsured"><option>5 Lac</option><option>7.5 Lac</option><option selected>10 Lac</option><option>12.5 Lac</option><option>15 Lac</option><option>20 Lac</option><option>25 Lac</option><option>30 Lac</option><option>35 Lac</option><option>50 Lac</option><option>75 Lac</option><option>1Cr</option></select></div>
             <div class="col-6"><label>Policy Type</label><select id="policyType"><option>Individual</option><option>Family Floater</option></select></div>
             <div class="col-6"><label>Combination</label><div class="band-wrap" style="gap:6px;"><select id="combination" style="flex:1;"><option>1A</option><option>2A</option><option>1A+1C</option><option>1A+2C</option><option>1A+3C</option><option>1A+4C</option><option>1A+5C</option><option>2A+1C</option><option>2A+2C</option><option>2A+3C</option><option>2A+4C</option><option>2A+5C</option></select><button class="btn btn-grey" id="genMembersBtn">Generate</button></div></div>
@@ -478,6 +480,7 @@
           <div class="section-title"><span class="tag">Quote Details</span><span class="divider"></span></div>
           <table class="result-table">
             <tbody>
+              <tr><th>Customer Name</th><td id="infoName"></td></tr>
               <tr><th>Sum Insured</th><td id="infoSI"></td></tr>
               <tr><th>Policy Type</th><td id="infoPT"></td></tr>
               <tr><th>Combination</th><td id="infoCombo"></td></tr>
@@ -828,6 +831,9 @@
   function calcPremium(){ 
     const siLabel=document.getElementById('sumInsured').value; const siVal=SI_LABEL_TO_VALUE[siLabel]; const pt=document.getElementById('policyType').value; const combo=document.getElementById('combination').value; const zone=document.getElementById('zone').value; const tenure=document.getElementById('tenure').value; const room=document.getElementById('roomCategory').value; const pedSel=document.getElementById('pedWait').value; const specSel=document.getElementById('specWait').value; const ncbSel=document.getElementById('ncb').value; const consumables=document.getElementById('consumables').value; const healthCheck=document.getElementById('healthCheck').value; const endless=document.getElementById('endless').value; const reconstructive=document.getElementById('reconstructive').value; const welcomeDisc=document.getElementById('welcomeDisc').value==='Yes'; const preferredNetwork=document.getElementById('preferredNetwork').value==='Yes';
     
+    // NEW: Get Customer Name
+    const custName = document.getElementById('customerName').value;
+
     const opd = document.getElementById('opd').value;
     const hospitalCash = document.getElementById('hospitalCash').value;
     const maternity = document.getElementById('maternity').value;
@@ -945,6 +951,9 @@
     document.getElementById('finalPremium').textContent=formatMoney(finalPremiumNoGST);
     document.getElementById('discountAmt').textContent=formatMoney(step3DiscountAmount+(pt==='Family Floater'? floaterAmt:0));
     
+    // NEW: Display Customer Name in Result
+    document.getElementById('infoName').textContent = custName || "—";
+    
     document.getElementById('infoSI').textContent=siLabel;
     document.getElementById('infoPT').textContent=pt;
     document.getElementById('infoCombo').textContent=combo;
@@ -1036,24 +1045,28 @@
     }
 
     // 2. Prepare Data for Message
+    const custName = document.getElementById('infoName').textContent;
     const premium = document.getElementById('finalPremium').textContent;
     const si = document.getElementById('infoSI').textContent;
     const policyType = document.getElementById('infoPT').textContent;
     const zone = document.getElementById('infoZone').textContent;
     const tenure = document.getElementById('infoTenure').textContent;
     const members = document.getElementById('infoMembersDetailed').textContent;
-const combination = document.getElementById('infoCombo').textContent;
-const memberData = getMembers();
-const memberAges = memberData.map(m => m.age).join(', ');
+    const combination = document.getElementById('infoCombo').textContent;
+    const memberData = getMembers();
+    const memberAges = memberData.map(m => m.age).join(', ');
 
-let msg = `*Health Alpha Quote* 🏥\n\n`;
+    let msg = `*Health Alpha Quote* 🏥\n\n`;
+    if(custName && custName !== "—") {
+      msg += `*Customer:* ${custName} \n`;
+    }
     msg += `*Final Premium:* ${premium} \n`;
     msg += `-----------------------------\n`;
     msg += `*Sum Insured:* ${si}\n`;
     msg += `*Policy Type:* ${policyType}\n`;
     msg += `*Zone / Tenure:* ${zone} / ${tenure}\n`;
     msg += `*Combination:* ${combination}\n`;  // 
-         msg += `*Member Ages:* ${memberAges}\n`;   // 
+    msg += `*Member Ages:* ${memberAges}\n`;   // 
     msg += `-----------------------------\n`;
     msg += `_Please find the attached quote for more details_`;
 
