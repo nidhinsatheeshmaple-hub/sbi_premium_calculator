@@ -1104,12 +1104,10 @@
             slider.style.width = `${width}px`;
         };
         
-        // Initial set (Run immediately)
+        // Initial set (wait a tick for rendering)
         const activeOpt = wrapper.querySelector('.toggle-option.active');
         if(activeOpt) {
-            moveSlider(activeOpt);
-            // Redundant safety check for slow loading fonts/layouts
-            window.addEventListener('load', () => moveSlider(activeOpt));
+            setTimeout(() => moveSlider(activeOpt), 50);
         }
         
         options.forEach(opt => {
@@ -1172,7 +1170,7 @@
   });
 
   // ==========================================
-  // UPDATED WHATSAPP SHARE LOGIC WITH CLIPBOARD
+  // UPDATED WHATSAPP SHARE LOGIC
   // ==========================================
   document.getElementById('waBtn').addEventListener('click', async () => {
     // 1. Check if result is visible
@@ -1196,15 +1194,15 @@
 
     let msg = `*Health Alpha Quote* 🏥\n\n`;
     if(custName && custName !== "—") {
-      msg += `*Customer:* ${custName} \n`;
+      msg += `*Customer Name:* ${custName} \n`;
     }
     msg += `*Final Premium:* ${premium} \n`;
     msg += `-----------------------------\n`;
     msg += `*Sum Insured:* ${si}\n`;
     msg += `*Policy Type:* ${policyType}\n`;
     msg += `*Zone / Tenure:* ${zone} / ${tenure}\n`;
-    msg += `*Combination:* ${combination}\n`;  
-    msg += `*Member Ages:* ${memberAges}\n`;   
+    msg += `*Combination:* ${combination}\n`;  // 
+    msg += `*Member Ages:* ${memberAges}\n`;   // 
     msg += `-----------------------------\n`;
     msg += `_Please find the attached quote for more details_`;
 
@@ -1221,6 +1219,7 @@
 
     // 4. Generate PDF Blob and Share
     try {
+      // Show simple loading feedback (optional)
       const btn = document.getElementById('waBtn');
       const originalText = btn.innerHTML;
       btn.innerHTML = 'Generating...';
@@ -1231,20 +1230,10 @@
 
       // Check if browser supports file sharing
       if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-        
-        // --- CLIPBOARD WORKAROUND FOR ANDROID ---
-        // Copy text to clipboard before opening share sheet
-        try {
-            await navigator.clipboard.writeText(msg);
-            alert("Quote PDF Generated!\n\nThe text message has been COPIED to your clipboard.\n\nPlease PASTE it into the caption box in WhatsApp.");
-        } catch (err) {
-            console.log("Clipboard write failed", err);
-        }
-        
         await navigator.share({
           files: [pdfFile],
           title: 'Health Alpha Quote',
-          text: msg // Still include it for apps that support it
+          text: msg
         });
       } else {
         // Fallback for Desktop (cannot share files directly)
@@ -1267,7 +1256,7 @@
       btn.innerHTML = originalText; // Restore button
     } catch (error) {
       console.error("Error sharing:", error);
-      // alert("Sharing failed or cancelled.");
+      alert("Sharing failed or cancelled.");
       document.getElementById('waBtn').innerHTML = 'WhatsApp'; // Restore
     }
   });
